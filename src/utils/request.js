@@ -3,18 +3,6 @@ const config = require('../config/index.js')
 const accountManager = require('./account.js')
 const { logger } = require('./logger')
 
-/**
- * 格式化消息数组为单条消息
- * @param {Array} messages - 消息数组
- * @returns {string} 格式化后的消息字符串
- */
-const formatMessages = (messages) => {
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-        return ""
-    }
-    
-    return messages.map(msg => `${msg.role}:${msg.content}`).join(';')
-}
 
 /**
  * 发送聊天请求
@@ -48,23 +36,14 @@ const sendChatRequest = async (body) => {
             timeout: 60 * 1000,
         }
 
-        // 格式化消息数组为单条消息
-        const formattedMessage = formatMessages(body.messages)
-        
-        // 创建新的请求体，将格式化后的消息作为单条消息
-        const newBody = {
-            ...body,
-            messages: [{
-                role: "user",
-                content: formattedMessage
-            }]
-        }
+        console.log(body)
+        // console.log(requestConfig)
 
-        const chat_id = await generateChatID(currentToken, body.model)
+        const chat_id = await generateChatID(currentToken,body.model)
 
         logger.network(`发送聊天请求`, 'REQUEST')
         const response = await axios.post("https://chat.qwen.ai/api/v2/chat/completions?chat_id=" + chat_id, {
-            ...newBody,
+            ...body,
             chat_id: chat_id
         }, requestConfig)
 
@@ -93,7 +72,7 @@ const sendChatRequest = async (body) => {
  * @param {*} currentToken 
  * @returns {Promise<string|null>} 返回生成的chat_id，如果失败则返回null
  */
-const generateChatID = async (currentToken, model) => {
+const generateChatID = async (currentToken,model) => {
     try {
         const response_data = await axios.post("https://chat.qwen.ai/api/v2/chats/new", {
             "title": "New Chat",
