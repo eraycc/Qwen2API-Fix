@@ -36,7 +36,7 @@ const sendChatRequest = async (body) => {
             timeout: 60 * 1000,
         }
 
-        console.log(body)
+        // console.log(body)
         // console.log(requestConfig)
 
         const chat_id = await generateChatID(currentToken,body.model)
