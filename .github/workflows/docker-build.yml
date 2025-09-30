@@ -1,19 +1,4 @@
 name: 构建并推送 Docker 镜像到 GHCR
-
-on:
-  push:
-    branches: [ "main", "master" ]
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "main", "master" ]
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -54,7 +39,6 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        no-cache: true
         platforms: linux/amd64,linux/arm64
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
