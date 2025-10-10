@@ -36,11 +36,11 @@ const sendChatRequest = async (body) => {
             timeout: 60 * 1000,
         }
 
-        // console.log(body)
-        // console.log(requestConfig)
+        console.log(body)
+        console.log(requestConfig)
 
         const chat_id = await generateChatID(currentToken,body.model)
-
+        logger.success(`生成chat_id: ${chat_id}`)
         logger.network(`发送聊天请求`, 'REQUEST')
         const response = await axios.post(`${config.apibaseurl}/api/v2/chat/completions?chat_id=` + chat_id, {
             ...body,
@@ -79,8 +79,8 @@ const generateChatID = async (currentToken,model) => {
             "models": [
                 model
             ],
-            "chat_mode": "local",
-            "chat_type": "t2i",
+            "chat_mode": "normal",
+            "chat_type": "t2t",
             "timestamp": new Date().getTime()
         }, {
             headers: {
